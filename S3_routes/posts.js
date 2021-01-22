@@ -1,10 +1,9 @@
-const express =require(  'express');
+const express = require("express");
 
-const { getPosts, createPost}  =require( '../S1_controllers/postsController');
+const { addUser } = require("../S1_controllers/postsController");
 
 const router = express.Router();
 
-router.get('/', getPosts);
-router.post('/', createPost);
+router.post("/addUser", addUser);
 
-module.exports=router;
+module.exports = router;
