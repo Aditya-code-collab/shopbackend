@@ -1,46 +1,32 @@
-const express = require( 'express');
-const mongoose =require( 'mongoose');
-
-const PostMessage =require( '../S2_Schemas/postsSchema');
+const express = require("express");
+const mongoose = require("mongoose");
+const User = require("../S2_Schemas/postsSchema");
 
 const router = express.Router();
 
-const getPosts = async (req, res) => { 
-    try {
-        const postMessages = await PostMessage.find();
-                
-       // res.send("RAJPUT"); here we use json object sending method
-       res.status(200).json(postMessages);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-}
+const addUser = async (req, res) => {
+  const user = req.body;
+  console.log(req.body.name);
+  try {
+    const newUser = new User({
+      name: req.body.name,
+      email: req.body.email,
+      city: req.body.city,
+      state: req.body.state,
+      password: req.body.password,
+    });
+    const createUser = newUser.save();
+    return res.send({
+      _id: createUser._id,
+      name: createUser.name,
+      email: createUser.email,
+      city: createUser.city,
+      state: createUser.state,
+      password: user.password,
+    });
+  } catch (e) {
+    return res.send({ message: e.message });
+  }
+};
 
-const getPost = async (req, res) => { 
-    const { id } = req.params;
-
-    try {
-        const post = await PostMessage.findById(id);
-        
-        res.status(200).json(post);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-}
-
-const createPost = async (req, res) => {
-    const { title, message, selectedFile, creator, tags } = req.body;
-
-    const newPostMessage = new PostMessage({ title, message, selectedFile, creator, tags })
-
-    try {
-        await newPostMessage.save();
-
-        res.status(201).json(newPostMessage );
-    } catch (error) {
-        res.status(409).json({ message: error.message });
-    }
-}
-
-
-module.exports={router,createPost,getPost,getPosts};
+module.exports = { router, addUser };
